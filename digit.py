@@ -34,6 +34,48 @@ def load():
 
     return df
 
+def model(X,Y):
+    X_train,X_test,Y_train,Y_test = train_test_split(X,Y)
+
+    pipeline = Pipeline([
+        ('clf',SVC(kernel='rbf',C =3,gamma = 0.01))
+    ])
+
+    parameters = {
+        # 'clf__gamma':(0.01,0.03,0.1,0.3,1),
+        # 'clf__C':(0.1,0.3,1,3,10,30),
+    }
+
+    grid_search = GridSearchCV(pipeline,parameters,n_jobs=2,verbose=1,scoring="accuracy")
+
+    grid_search.fit(X,Y)
+
+    print "Best score on model:",grid_search.best_score_
+    print "parameters:"
+    best_parameter = grid_search.best_estimator_.get_params()
+    print best_parameter
+    # pred = grid_search.predict(X_test)
+    # print classification_report(Y_test,pred)
+
+    df = pd.read_csv("test.csv",delimiter=",",header=0)
+
+    df = np.array(df)
+    x_test = df
+    x_test =  x_test/255.0 * 2 -1
+    # reduced_X_test = pca(X,Y)
+    pred = grid_search.predict(x_test).tolist()
+    ids = list(range(1, 28001))
+
+
+    with open("results.csv", "wb") as predictions_file:
+        # predictions_file = open("myfirstforest.csv", "wb")
+        open_file_object = csv.writer(predictions_file, delimiter=',')
+        open_file_object.writerow(["ImageId","Label"])
+        open_file_object.writerows(zip(ids,pred))
+        # predictions_file.close()
+        print "Done"
+
+
 
 
 
