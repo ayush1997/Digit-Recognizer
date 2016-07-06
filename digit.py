@@ -28,7 +28,7 @@ def plot_digit(X):
     plt.show()
 
 def load():
-    df = pd.read_csv("train.csv",delimiter=",",header=0)
+    df = pd.read_csv("dataset/train.csv",delimiter=",",header=0)
     # print df.describe()
     # print df.head()
 
@@ -57,7 +57,7 @@ def model(X,Y):
     # pred = grid_search.predict(X_test)
     # print classification_report(Y_test,pred)
 
-    df = pd.read_csv("test.csv",delimiter=",",header=0)
+    df = pd.read_csv("dataset/test.csv",delimiter=",",header=0)
 
     df = np.array(df)
     x_test = df
